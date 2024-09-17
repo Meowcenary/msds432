@@ -1,0 +1,94 @@
+---
+Data engineering and data analysis terms have been well-known in the industry since the 1970s, and it is highly likely
+that in your professional career you have come across a task that required you to work on collecting and processing data
+to put it in a suitable form for further analysis. What was the technology or tool that you used for the collection and
+processing of this data? Did you use Excel or SQL/NoSQL? How often did you need to perform this task? What was the size
+of the data you worked on? Did you perform any programming for that task?
+---
+
+An instance that comes to mind is previous project that downloaded XML files from a data reporting app and then parsed
+the data into a MySQL database. When I first came to the project, the scripts to download and parse the data were in
+Perl. There were also bash and sql scripts to initialize the project and to link scripts together. Due to my lack of
+experience with Perl, I decided to rewrite the scripts in Python. In both the original Perl and updated Python scripts,
+an XML parsing library and a MySQL library were used. Cron was used to automate the data collection and parsing, but the
+scripts could also be run manually if needed. Data was scheduled to be collected once per a week. The combined size of
+the data files at the end of the project was only 429MB. The Perl version of the project was modified slightly to work
+on the server it was deployed to, but generally left alone. I did the Python rewrite of the project, but it was mostly
+refactoring what was already there. We are actively working on a new version of this project in Python using Django and
+Postgres and I am doing much more programming work there.
+
+---
+There are many programming languages and programming paradigms, and in this course we will use Go language as the
+primary language. However, the Go language is often referenced as a systems programming language rather than an
+application programming language or scripting language. Do you think the Go language is the best fit to perform data
+engineering tasks? Present an example to illustrate the rationale behind your opinion.
+---
+
+I think Go is a fine choice for data engineering tasks, but it's undeniably a more difficult programming language to
+learn than Python or other scripting languages. Python also has significantly more libraries available in general due to
+it's popularity, but I'm not entirely sure how data engineering specific libraries compare in Go and Python as my only
+experience using Go was in the introduction class at SPS. From my perspective, the primary benefit of using Go is that
+it is significantly faster than Python, so if performance is critical to success, I think it would be the better option.
+
+
+---
+The three big tech companies (Amazon, Google, and Microsoft) that ignited the revolution of cloud based computing and
+microservices have contributed in direct or indirect ways to the emergence of many of the technologies that are widely
+utilized in the software industry, including Docker, Kubernetes, GoLang, YAML, Git, etc. Have you ever used any of these
+technologies before? If yes, in what context?
+---
+
+I've worked as a programmer in several positions over my career and all of them used git. I've primarily worked in Ruby
+on Rails and through that YAML which is used for configuration files. As mentioned, I've used GoLang in the introduction
+class taught here at SPS, but nothing outside of that. Until recently, I did not have much experience with Docker, but
+now that I feel more confident using it I've started to incorporate it into my work more and more. Alongside Ansible, it
+has made deployments a lot easier to manage. This was not listed, but I've recently shifted my focus from Ruby on Rails
+to Python and the Django framework. I've had some experience with Python, but even without it I think the jump would be
+fairly easy for most people as they're similar languages.
+
+---
+Our final project is geared toward full-stack backend engineering of data-centric microservices for the Chicago Business
+Intelligence for Strategic Planning project. The requirements and specifications document for this project requires the
+use of the City of Chicago data portal as well as several technologies and platforms for data engineering and
+application engineering. Do you have prior knowledge of or experience with any of the technologies/platforms listed
+below? If your answer is yes, provide the context in which you learned or used any of these technologies.
+---
+
+- Go programming language
+
+  My only experience with Go is from the introductory class at SPS.
+
+- Docker
+
+  I've used Docker quite a bit at my current job, but after the initial configuration there hasn't been much that needed
+	to change.
+
+- Kubernetes
+
+	I've never used Kubernetes.
+
+- SODA API
+
+  I've never used SODA API.
+
+- HTTP/REST
+
+  Almost all of my experience with HTTP/REST is through Ruby on Rails. I've also used REST APIs for several projects.
+
+- Google reverse geocoding
+
+  I briefly worked with Google Cloud as part of the databases course at SPS.
+
+- Google Cloud
+
+  I briefly worked with Google Cloud as part of the databases course at SPS.
+
+- YAML
+
+  I've primarily used YAML in the context of Ruby on Rails, but I've also used it with Github Actions to configure
+	workflows.
+
+- Postgres
+
+  Postgres has been my go to database for years now. I tend to work with it through an ORM, but have worked with it
+  directly on few occasions.

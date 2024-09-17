@@ -1,0 +1,11 @@
+---
+When developing data-intensive software applications, the data engineer, after reviewing the requirements specification
+document, must decide which processing model is most appropriate for the software application. Illustrate by example
+each of the three processing models: interactive (online), stream, and batch processing.
+---
+
+---
+In the prior module, you reviewed and analyzed the requirements and data sources for the Chicago Business Intelligence
+for Strategic Planning project. Based on the work that you completed for that task, explain which processing model(s)
+will be most appropriate to utilize in the design and development of the final project.
+---

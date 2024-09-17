@@ -1,0 +1,32 @@
+---
+Legacy REST APIs might suffer from data over-fetching or under-fetching compared to the new technology of GraphQL. Give
+an example to illustrate how REST API might be over-fetching data.
+---
+
+---
+After you review the different data exchange formats and the categories of communication styles, provide an example of a
+data analytics application to illustrate the usage of one of these communication styles. Discuss whether the data source
+in your example is geared toward batch or near real-time interactive processing.
+---
+
+---
+For the final project, we need to connect to the City of Chicago data portal to collect data for batch and interactive
+processing. The City of Chicago offers an API to its datasets using Socrata Open Data API (SODA). Explain how we could
+use SODA APILinks to an external site. to collect data on COVIDLinks to an external site., taxi tripsLinks to an
+external site., poverty in community areas, unemployment, and per capita incomeLinks to an external site..
+---
+
+---
+The strategic planning team for the City of Chicago has asked you to identify the top three community areas with the
+highest unemployment and the highest percentage of people below the poverty line so that they can offer incentives for
+developers and investors in those community areas. As a data engineer, you have access to two datasets: the building
+permits datasetLinks to an external site. and the unemployment/poverty datasetLinks to an external site..
+---
+
+---
+After you inspect these two datasets, discuss how you will tackle the issue of the absence of zip codes in the
+unemployment dataset to track the number of building permits issued for every community area that the City of Chicago
+can use to offer incentives to developers and investors in the underserved and underinvested community areas. The City
+of Chicago has a link that lists Chicago communitiesLinks to an external site. relative to their zip codes and
+neighborhood labels; note that it is not a one-to-one mapping.
+---
