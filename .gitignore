@@ -3,3 +3,6 @@
 *.csv
 *.tsv
 .DS_Store
+
+# API key for Google maps
+api.key

@@ -8,6 +8,8 @@ import (
 	"log"
 	"os"
 	"path"
+	"sort"
+	"time"
 )
 
 func main() {
@@ -24,11 +26,33 @@ func main() {
 			log.Fatal(err)
 		}
 
-		for i := 0; i < len(records); i++ {
-			if i == 0 {
-				fmt.Println(records[i])
+		for i := 1; i < 2; i++ { // i < len(records); i++ {
+			fmt.Println(records[i][2])
+			dayOfWeek, err := DayOfWeekFrom(records[i][2])
+
+			if err != nil {
+				log.Fatal(err)
 			}
+
+			fmt.Println(dayOfWeek)
 		}
+
+		crashesByYear, err := CrashesByYear(records[1:])
+
+		fmt.Println(crashesByYear)
+
+		crashes, err := ParseCrashData(records[1:])
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		crashesByYearAndWeekday, err := CrashesByYearAndWeekday(crashes)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		PrettyPrintCrashesByYearAndWeekday(crashesByYearAndWeekday)
+		// fmt.Println(crashesByYearAndWeekday)
 	}
 }
 
@@ -111,4 +135,165 @@ func CsvDataByColumn(data [][]string) (map[string][]string, error) {
 	}
 
 	return dataByColumn, nil
+}
+
+/*
+* Return the day of the week given the date as a string
+*/
+func DayOfWeekFrom(date string) (string, error) {
+	// This is a specific reference time used by Go, but formatted to reflect the time format in the file
+	t, err := time.Parse("01/02/2006 03:04:05 PM", date)
+
+	if err != nil {
+			panic(err)
+	}
+
+	return t.Weekday().String(), nil
+}
+
+/*
+* Return the year from the date a string
+*/
+func YearFrom(date string)(int, error) {
+	t, err := time.Parse("01/02/2006 03:04:05 PM", date)
+
+	if err != nil {
+			panic(err)
+	}
+
+	return t.Year(), nil
+}
+
+/*
+* Struct to represent a record from the crash data
+*/
+type Crash struct {
+	// consider using Weekday type: https://pkg.go.dev/time#Weekday
+	weekday string
+	date time.Time
+	// set to zero as default
+	zipcode int
+}
+
+/*
+* Parse the crash data into Crash structs that can be used for different operations
+*/
+func ParseCrashData(data [][]string) ([]Crash, error){
+	crashes := make([]Crash, 0)
+
+	for _, row := range data {
+		date, date_err := time.Parse("01/02/2006 03:04:05 PM", row[2])
+		weekday := date.Weekday().String()
+
+		// Check for errors
+		if date_err != nil {
+			panic(date_err)
+		} else {
+			crashes = append(crashes, Crash{weekday: weekday, date: date, zipcode: 0})
+		}
+	}
+
+	return crashes, nil
+}
+
+/*
+* Return a map of year to map of weekday to number of crashes in that weekday
+*/
+func CrashesByYearAndWeekday(crashes []Crash) (map[int]map[string]int, error) {
+	crashesByYearAndWeekday := make(map[int]map[string]int)
+
+	for i := 0; i < len(crashes); i++ {
+		crash := crashes[i]
+		year := crash.date.Year()
+		weekday := crash.weekday
+
+		_, exists := crashesByYearAndWeekday[year]
+		if exists {
+			_, exists = crashesByYearAndWeekday[year][weekday]
+
+			if exists {
+				crashesByYearAndWeekday[year][weekday] += 1
+			} else {
+				crashesByYearAndWeekday[year][weekday] = 1
+			}
+		} else {
+			crashesByYearAndWeekday[year] = make(map[string]int)
+			crashesByYearAndWeekday[year][weekday] = 1
+		}
+	}
+
+	return crashesByYearAndWeekday, nil
+}
+
+func PrettyPrintCrashesByYearAndWeekday(m map[int]map[string]int) {
+	// Extract the year keys from the outer map
+	years := make([]int, 0, len(m))
+	for year := range m {
+		years = append(years, year)
+	}
+
+	// Sort the years
+	sort.Ints(years)
+
+	// Print the map using the sorted years
+	for _, year := range years {
+		fmt.Printf("%d:\n", year)
+
+		// Extract the inner map for this year
+		innerMap := m[year]
+
+		// Print the inner map data
+		for innerKey, value := range innerMap {
+			fmt.Printf("    %s: %d\n", innerKey, value)
+		}
+	}
+}
+
+/*
+* Return a map of year to number of crashes reported in that year (int)
+*/
+func CrashesByYear(data [][]string) (map[int]int, error) {
+	crashesByYear := make(map[int]int)
+
+	for _, row := range data {
+		// column for date
+		date := row[2]
+		year, err := YearFrom(date)
+
+		if err != nil {
+			panic(err)
+		}
+
+		crashesByYear[year] += 1
+	}
+
+	return crashesByYear, nil
+}
+
+/*
+*
+*/
+func CrashesByYearAndWeekDay(data [][]string) (map[int]int, error) {
+	crashesByYear := make(map[int]int)
+
+	for _, row := range data {
+		// column for date
+		date := row[2]
+		year, err := YearFrom(date)
+
+		if err != nil {
+			panic(err)
+		}
+
+		crashesByYear[year] += 1
+	}
+
+	return crashesByYear, nil
+}
+
+/*
+* Find zip code from longitude and latitude using Google geocoder API
+*/
+func ZipFromLongLat() (error) {
+	return nil
 }
