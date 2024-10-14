@@ -22,7 +22,7 @@ func main() {
 	args := os.Args
 	argumentError := "This program expects the path to the csv file as a single command line argument"
 
-	geocoder.ApiKey = "AIzaSyBFd1zC3oSF5b23Au5GtGufrlBIGuGCrSg"
+	geocoder.ApiKey = "Replace with API Key"
 
 	if len(args) != 2 {
 		fmt.Println(argumentError)
