@@ -3,73 +3,77 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"reflect"
+	"time"
 )
 
-// Integer Experiments
-// Function for running the experiment with integer values
-func experimentInt() {
-	multiply := func(values []int, multiplier int) []int {
-		multipliedValues := make([]int, len(values))
-		for i, v := range values {
-			multipliedValues[i] = v * multiplier
-		}
-		return multipliedValues
-	}
-	add := func(values []int, additive int) []int {
-		addedValues := make([]int, len(values))
-		for i, v := range values {
-			addedValues[i] = v + additive
-		}
-		return addedValues
-	}
+// Run the experiment for int64 and float64 types
+func main() {
+	// I noticed that it was able to process as many as a 100,000,000 records without issue, but
+	// once it hit 1,000,000,000, everything slowed down considerably. I think this is due to
+	// memory issues, but I'm not really sure. The runtimes for 1 Billion records were 1m15.81301957s
+	// for integers and 2m44.058801262s for floats
+	// experimentSizes := []int64{1000000000}
 
-	ints := []int{1, 2, 3, 4}
-	for _, v := range add(multiply(ints, 2), 1) {
-		fmt.Println(v)
+	experimentSizes := []int64{10000, 100000, 1000000}
+
+	for i := range experimentSizes {
+		experiment(experimentSizes[i])
 	}
 }
 
-// Return an array of random floats between FLOATMIN FLOATMAX
-// Float Experiments
-func createRandomFloats(size) []float64 {
-	randomFloats := make([]float64, size)
+// Run a trial with an array of the specified size
+func experiment(size int64) {
+	// Generate random floats and run experiment
+	randomInts := createRandomValues[int64](size)
 
+	startIntegerTime := time.Now()
+	// Generate random int64 and run experiment
+	for _, _ = range addValues(multiplyValues(randomInts, 2), 1) {
+		continue
+	}
+	endIntegerTime := time.Now()
+	totalIntegerTime := endIntegerTime.Sub(startIntegerTime)
+
+	startFloatTime := time.Now()
+	// Generate random int64 and run experiment
+	for _, _ = range addValues(multiplyValues(randomInts, 2), 1) {
+		continue
+	}
+	endFloatTime := time.Now()
+	totalFloatTime := endFloatTime.Sub(startFloatTime)
+
+	fmt.Println("Size: ", size, "\nRuntime for integers:", totalIntegerTime, "\nRuntime for floats:", totalFloatTime)
+}
+
+// Using generics to reduce the amount of code
+func createRandomValues[valueType int64 | float64](size int64) []valueType {
+	randomValues := make([]valueType, size)
 	for i := range size {
-		randomFloats[i] = rand.Float64()
-	}
+		typeForRand := reflect.TypeOf(*new(valueType))
 
-	return randomFloats
+		switch typeForRand.Kind() {
+		case reflect.Int64:
+			randomValues[i] = any(rand.Int63()).(valueType)
+		case reflect.Float64:
+			randomValues[i] = any(rand.Float64()).(valueType)
+		}
+	}
+	return randomValues
 }
 
-func multiplyFloats(values []float64, multiplier float64) []float64 {
-	multipliedValues := make([]float64, len(values))
-
+func multiplyValues[valueType int64 | float64](values []valueType, multiplier valueType) []valueType {
+	multipliedValues := make([]valueType, len(values))
 	for i, v := range values {
 		multipliedValues[i] = v * multiplier
 	}
-
 	return multipliedValues
 }
 
-func addFloats(values []float64, additive float64) []float64 {
-	addedValues := make([]float64, len(values))
-
+func addValues[valueType int64 | float64](values []valueType, additive valueType) []valueType {
+	addedValues := make([]valueType, len(values))
 	for i, v := range values {
 		addedValues[i] = v + additive
 	}
-
 	return addedValues
-}
-
-// Function for running the experiment with float values
-// size - the size of the experiment set
-// returns - nothing
-func experimentFloat(size int) {
-	multiply := multiplyFloats
-	add := addFloats
-
-	var randomFloats := createRandomFloats(size)
-	for _, v := range add(multiply(randomFloats, 2), 1) {
-		fmt.Println(v)
-	}
 }
