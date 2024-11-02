@@ -1,7 +1,10 @@
 # Ignore large files
 *.pdf
+*.docx
 *.csv
 *.tsv
+*.zip
+*.mp4
 .DS_Store
 
 # API key for Google maps
