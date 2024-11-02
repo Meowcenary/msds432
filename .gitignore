@@ -9,3 +9,7 @@
 
 # API key for Google maps
 api.key
+
+# This folder is for storing files for the Postgres container
+# used for this assignment
+Assignment5/source_code/postgres/
