@@ -35,7 +35,9 @@ func DataCounts(url string) error {
 		return nil
 }
 
-func GetAllData(url string) error {
+// This should probably be refactored, so that the dataset types lives in this package, but for now it will do.
+// sortField is necessary because OffsetGetRequest requires an ordering
+func GetAllData(url string, tableName string, sortField string) error {
     // Determine model type from the URL to map to the correct struct
     model, exists := UrlToModel[url]
     if !exists {
@@ -49,19 +51,20 @@ func GetAllData(url string) error {
     // Create the request and offset request
     request := soda.NewGetRequest(url, "")
     request.Format = "json"
-    request.Query.AddOrder("trip_id", soda.DirAsc)
+    request.Query.AddOrder(sortField, soda.DirAsc)
     offsetRequest, err := soda.NewOffsetGetRequest(request)
     if err != nil {
         return err
     }
 
     // Get the data using goroutines
-    for i := 0; i < 10; i++ {
+    for i := 0; i < 5; i++ {
         offsetRequest.Add(1)
         go func() {
             defer offsetRequest.Done()
 
             for {
+                // resp, err := offsetRequest.Next(2000)
                 resp, err := offsetRequest.Next(2000)
                 if err == soda.ErrDone {
                     break
@@ -86,6 +89,16 @@ func GetAllData(url string) error {
                 // We need to cast it back to the appropriate slice type
                 actualSlice := reflect.ValueOf(modelSlice).Elem().Interface()
 								modelSliceValue := reflect.ValueOf(actualSlice)
+
+                // For each batch of data, call InsertData to insert into the DB
+                for i := 0; i < modelSliceValue.Len(); i++ {
+                  item := modelSliceValue.Index(i).Interface() // get each item in the slice
+                  fmt.Println(fmt.Sprintf("%+v", item))
+                  if err := dbconnector.InsertData(tableName, item); err != nil {
+                    log.Fatal(err)
+                  }
+                }
+
 								fmt.Printf("Processed %d records\n", modelSliceValue.Len())
             }
         }()

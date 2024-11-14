@@ -1,19 +1,19 @@
 -- This script is invoked when the postgres container is created if there is no
 -- database found. This means that this this script only runs if no data has
 -- been persisted i.e the postgres-data volume has been removed.
-DROP DATABASE IF EXISTS msds432;
-CREATE DATABASE msds432;
-
-DROP TABLE IF EXISTS TaxiTrips;
-DROP TABLE IF EXISTS TransportationNetworkProvidersTrips;
-DROP TABLE IF EXISTS PublicHealthStatistics;
-DROP TABLE IF EXISTS BuildingPermits;
-DROP TABLE IF EXISTS Covid19Reports;
-DROP TABLE IF EXISTS ChicagoCovid19CommunityVulnerabilityIndex;
+-- DROP DATABASE IF EXISTS msds432;
+-- CREATE DATABASE msds432;
+--
+DROP TABLE IF EXISTS "TaxiTrips";
+DROP TABLE IF EXISTS "TransportationNetworkProvidersTrips";
+DROP TABLE IF EXISTS "PublicHealthStatistics";
+DROP TABLE IF EXISTS "BuildingPermits";
+DROP TABLE IF EXISTS "Covid19Reports";
+DROP TABLE IF EXISTS "ChicagoCovid19CommunityVulnerabilityIndex";
 
 \c msds432;
 
-CREATE TABLE TaxiTrips (
+CREATE TABLE "TaxiTrips" (
     ID SERIAL PRIMARY KEY,
     TripID VARCHAR(100),
     TripStart TIMESTAMPTZ,
@@ -30,7 +30,7 @@ CREATE TABLE TaxiTrips (
     DropoffZipcode INT
 );
 
-CREATE TABLE TransportationNetworkProvidersTrips (
+CREATE TABLE "TransportationNetworkProvidersTrips" (
     ID SERIAL PRIMARY KEY,
     TripID VARCHAR(100),
     TripStart TIMESTAMPTZ,
@@ -47,8 +47,9 @@ CREATE TABLE TransportationNetworkProvidersTrips (
     DropoffZipcode INT
 );
 
-CREATE TABLE PublicHealthStatistics (
+CREATE TABLE "PublicHealthStatistics" (
     ID SERIAL PRIMARY KEY,
+    BuildingPermitId VARCHAR(100),
     Zipcode INT,
     BelowPovertyLevel DOUBLE PRECISION,
     PerCapitaIncome INT,
@@ -56,7 +57,7 @@ CREATE TABLE PublicHealthStatistics (
 );
 
 -- Varchars are temp values for now, might need to be adjusted
-CREATE TABLE BuildingPermits (
+CREATE TABLE "BuildingPermits" (
     ID SERIAL PRIMARY KEY,
     PermitNumber VARCHAR(100),
     -- PermitType - Enum
@@ -69,7 +70,7 @@ CREATE TABLE BuildingPermits (
     ZipCode INT
 );
 
-CREATE TABLE Covid19Reports (
+CREATE TABLE "Covid19Reports" (
     ID SERIAL PRIMARY KEY,
     ZipCode INT,
     WeekNumber INT,
@@ -89,11 +90,11 @@ CREATE TABLE Covid19Reports (
 );
 
 
-CREATE TABLE ChicagoCovid19CommunityVulnerabilityIndex (
+CREATE TABLE "ChicagoCovid19CommunityVulnerabilityIndex" (
     GeographyType VARCHAR(10),
     CommunityAreaOrZipCode INT,
     CommunityAreaName VARCHAR(100),
-    CcviScore INT,
+    CcviScore DOUBLE PRECISION,
     CcviCategory VARCHAR(10),
     RankSocioeconomicStatus INT,
     RankHouseholdCompositionAndDisability INT,
