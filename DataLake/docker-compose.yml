@@ -14,12 +14,13 @@ services:
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydb
+      POSTGRES_DB: msds432
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      # Use something other than port 5432 for the host machine to avoid conflicts
+      - "5431:5432"
 
 volumes:
   postgres-data:

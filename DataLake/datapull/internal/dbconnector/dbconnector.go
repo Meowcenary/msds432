@@ -4,7 +4,7 @@ import (
   "database/sql"
   // "errors"
   "fmt"
-  // "log"
+  "log"
   "strings"
 
   _ "github.com/lib/pq"
@@ -12,11 +12,11 @@ import (
 
 // Connection details
 var (
-  Hostname = ""
-  Port     = 2345
-  Username = ""
-  Password = ""
-  Database = ""
+  Hostname = "localhost"
+  Port     = 5431
+  Username = "myuser"
+  Password = "mypassword"
+  Database = "msds432"
 )
 
 func openConnection() (*sql.DB, error) {
@@ -30,6 +30,27 @@ func openConnection() (*sql.DB, error) {
     return nil, err
   }
   return db, nil
+}
+
+func CountData(tableName string) error {
+  var count int
+
+  db, err := openConnection()
+  if err != nil {
+		return fmt.Errorf("failed to insert data: %w", err)
+  }
+
+  query := fmt.Sprintf("SELECT COUNT(*) FROM %s", tableName)
+  err = db.QueryRow(query).Scan(&count)
+
+  switch {
+    case err != nil:
+        log.Fatal(err)
+    default:
+        fmt.Printf("Number of rows for %s is %d\n", tableName, count)
+  }
+
+  return nil
 }
 
 // Insert data into specified table.

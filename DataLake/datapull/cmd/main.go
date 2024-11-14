@@ -4,37 +4,65 @@ import (
 	"fmt"
 	"log"
 
-	// "github.com/DataLake/datapull/internal/pull"
-	// "github.com/DataLake/datapull/internal/dbconnector"
-
-	"github.com/SebastiaanKlippert/go-soda"
+	"datapull/internal/dbconnector"
+	"datapull/internal/pull"
 )
 
-func main() {
-	fmt.Println("Pulling from data sources")
+type Dataset struct {
+    Name string
+    TableName string
+		Url string
+    // Model
+}
 
-	dataSets := map[string]string{
-		"Taxi Trips (2013-2023)": "https://data.cityofchicago.org/resource/wrvz-psew",
-		"Transportation Network Providers - Trips (2018 - 2022)":  "https://data.cityofchicago.org/resource/m6dm-c72p",
-		"City of Chicago Building Permits": "https://data.cityofchicago.org/resource/ydr8-5enu",
-		"Chicago COVID-19 Community Vulnerability Index (CCVI)": "https://data.cityofchicago.org/resource/2ns9-phjk",
-		"Daily Chicago COVID-19 Cases, Deaths, and Hospitalizations - Historical": "https://data.cityofchicago.org/resource/naz8-j4nc",
-		"COVID-19 Cases, Tests, and Deaths by ZIP Code - Historical": "https://data.cityofchicago.org/resource/yhhz-zm2v",
-		"Public Health Statistics - Selected public health indicators by Chicago community area - Historical": "https://data.cityofchicago.org/resource/iqnk-2tcu",
+func main() {
+	dataSets := []Dataset{
+    {
+    	Name:      "Taxi Trips (2013-2023)",
+      TableName: "TaxiTrips",
+      Url:       "https://data.cityofchicago.org/resource/wrvz-psew",
+    },
+    {
+      Name:      "Transportation Network Providers - Trips (2018 - 2022)",
+      TableName: "TransportationNetworkProvidersTrips",
+      Url:       "https://data.cityofchicago.org/resource/m6dm-c72p",
+    },
+    {
+      Name:      "City of Chicago Building Permits",
+      TableName: "PublicHealthStatistics",
+      Url:       "https://data.cityofchicago.org/resource/ydr8-5enu",
+    },
+    {
+      Name:      "Chicago COVID-19 Community Vulnerability Index (CCVI)",
+      TableName: "BuildingPermits",
+      Url:       "https://data.cityofchicago.org/resource/2ns9-phjk",
+    },
+    {
+      Name:      "Daily Chicago COVID-19 Cases, Deaths, and Hospitalizations - Historical",
+      TableName: "Covid19Reports",
+      Url:       "https://data.cityofchicago.org/resource/naz8-j4nc",
+    },
+    // {
+    //   Name:      "COVID-19 Cases, Tests, and Deaths by ZIP Code - Historical",
+    //   TableName: "covid_zip_code",
+    //   Url:       "https://data.cityofchicago.org/resource/yhhz-zm2v",
+    // },
+    {
+      Name:      "Public Health Statistics - Selected public health indicators by Chicago community area - Historical",
+      TableName: "ChicagoCovid19CommunityVulnerabilityIndex",
+      Url:       "https://data.cityofchicago.org/resource/iqnk-2tcu",
+    },
 	}
 
-	// Replace with pull.GetAllData(url)
-	// Geocode data with geocoder.ZipFromPoint(), geocoder.CommunityAreaFromZip(), etc.
-	// Insert data with dbconnector.InsertData(tablename)
-	for title, url := range dataSets {
-		fmt.Println(fmt.Sprintf("%s%s", "Pulling ", title))
-		sodareq := soda.NewGetRequest(url, "")
-		//count all records
-		count, err := sodareq.Count()
+	fmt.Println("Pulling from data sources")
+
+	// for title, url := range dataSets {
+	for _, dataSet := range dataSets {
+		fmt.Println(fmt.Sprintf("%s%s", "Pulling ", dataSet.Name))
+		err := pull.GetAllData(dataSet.Url)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(count)
+		dbconnector.CountData(dataSet.TableName)
 	}
-
 }

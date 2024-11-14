@@ -17,4 +17,4 @@ postgres - Database for the data lake. To run the database use
 Scripts
 ---
 Scripts for development are stored in the "scripts" directory and can generally
-be run with bash. For example, `bash scripts/reset-db.sh`
+be run with bash. For example, `bash scripts/rebuild-containers.sh`.

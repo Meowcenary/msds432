@@ -88,5 +88,22 @@ CREATE TABLE Covid19Reports (
     ZipCodeLocation POINT
 );
 
--- CREATE TABLE ChicagoCovid19CommunityVulnerabilityIndex (
--- );
+
+CREATE TABLE ChicagoCovid19CommunityVulnerabilityIndex (
+    GeographyType VARCHAR(10),
+    CommunityAreaOrZipCode INT,
+    CommunityAreaName VARCHAR(100),
+    CcviScore INT,
+    CcviCategory VARCHAR(10),
+    RankSocioeconomicStatus INT,
+    RankHouseholdCompositionAndDisability INT,
+    RankAdultsWithNoPcp INT,
+    RankCumulativeMobilityRatio INT,
+    RankFrontlineEssentialWorkers INT,
+    RankAge INT,
+    RankComorbidConditions INT,
+    RankCovidIncidenceRate INT,
+    RankCovidHospitalAdmissionRate INT,
+    RankCovidCrudeMortalityRate INT,
+    Location POINT
+);
