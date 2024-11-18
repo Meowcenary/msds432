@@ -6,10 +6,14 @@ found below.
 
 Backend Microservices
 ---
+api - Serves JSON data to be ingested by React JS frontend application. To build
+    the project run `docker compose up --build api`. The accessible ports can
+    be edited in `docker-compose.yml`.
+
 datapull - Pulls data from Chicago Data Portal using Go and the SODA API. To
     build the project run `docker-compose build --no-cache datapull` or omit the
     `--no-cache` flag to speed things up a bit. To run the service use
-    `docker-compose up datapull`
+    `docker-compose up datapull`.
 
 postgres - Database for the data lake. To run the database use
     `docker-compose up postgres`.

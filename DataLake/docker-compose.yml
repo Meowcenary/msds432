@@ -1,9 +1,16 @@
 version: '3.8'
 
 services:
+  api:
+    build:
+      context: ./api
+    ports:
+      - "8080:8080"
+
   datapull:
     build:
-      context: ./datapull
+      context: .
+      dockerfile: ./datapull/Dockerfile
     # ports:
     #   - "8081:8081"
     # depends_on:
