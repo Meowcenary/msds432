@@ -17,10 +17,10 @@ import (
 var UrlToModel = map[string]interface{}{
 	"https://data.cityofchicago.org/resource/wrvz-psew": &models.TaxiTrip{},
   "https://data.cityofchicago.org/resource/m6dm-c72p": &models.TransportationNetworkProvidersTrip{},
-	"https://data.cityofchicago.org/resource/iqnk-2tcu": &models.PublicHealthStatistic{},
 	"https://data.cityofchicago.org/resource/ydr8-5enu": &models.BuildingPermit{},
-	"https://data.cityofchicago.org/resource/naz8-j4nc": &models.Covid19Report{},
 	"https://data.cityofchicago.org/resource/2ns9-phjk": &models.ChicagoCovid19CommunityVulnerabilityIndex{},
+	"https://data.cityofchicago.org/resource/iqnk-2tcu": &models.PublicHealthStatistic{},
+	"https://data.cityofchicago.org/resource/yhhz-zm2v": &models.Covid19Report{},
 }
 
 func DataCounts(url string) error {
@@ -58,14 +58,13 @@ func GetAllData(url string, tableName string, sortField string) error {
     }
 
     // Get the data using goroutines
-    for i := 0; i < 5; i++ {
+    for i := 0; i < 10; i++ {
         offsetRequest.Add(1)
         go func() {
             defer offsetRequest.Done()
 
             for {
-                // resp, err := offsetRequest.Next(2000)
-                resp, err := offsetRequest.Next(2000)
+                resp, err := offsetRequest.Next(4000)
                 if err == soda.ErrDone {
                     break
                 }
@@ -93,7 +92,7 @@ func GetAllData(url string, tableName string, sortField string) error {
                 // For each batch of data, call InsertData to insert into the DB
                 for i := 0; i < modelSliceValue.Len(); i++ {
                   item := modelSliceValue.Index(i).Interface() // get each item in the slice
-                  fmt.Println(fmt.Sprintf("%+v", item))
+                  // fmt.Println(fmt.Sprintf("%+v", item))
                   if err := dbconnector.InsertData(tableName, item); err != nil {
                     log.Fatal(err)
                   }

@@ -3,18 +3,19 @@ version: '3.8'
 services:
   api:
     build:
-      context: ./api
+      context: .
+      dockerfile: ./api/Dockerfile
     ports:
       - "8080:8080"
+    # depends_on:
+      # - postgres
 
   datapull:
     build:
       context: .
       dockerfile: ./datapull/Dockerfile
-    # ports:
-    #   - "8081:8081"
-    # depends_on:
-    #   - db
+    depends_on:
+      - postgres
 
   postgres:
     image: postgres:latest

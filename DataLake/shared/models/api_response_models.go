@@ -4,6 +4,8 @@ import (
     "database/sql/driver"
     "encoding/json"
     "fmt"
+    "strconv"
+    "strings"
     "time"
 )
 
@@ -44,6 +46,50 @@ func (p *Point) UnmarshalJSON(data []byte) error {
 func (p Point) Value() (driver.Value, error) {
 	// Format the Point as '(lat, lon)' for PostgreSQL
 	return fmt.Sprintf("(%f,%f)", p.Latitude, p.Longitude), nil
+}
+
+// Scan implements the sql.Scanner interface for Point
+func (p *Point) Scan(value interface{}) error {
+    // Check if the value is a []uint8 (returned by PostgreSQL driver for textual data)
+    bytes, ok := value.([]uint8)
+    if !ok {
+        return fmt.Errorf("unsupported Scan, storing driver.Value type %T into type Point", value)
+    }
+
+    // Convert the byte slice to a string
+    str := string(bytes)
+
+    // Parse PostgreSQL POINT format: "(longitude, latitude)"
+    if !strings.HasPrefix(str, "(") || !strings.HasSuffix(str, ")") {
+        return fmt.Errorf("invalid POINT format: %s", str)
+    }
+
+    // Trim parentheses
+    coords := strings.TrimPrefix(str, "(")
+    coords = strings.TrimSuffix(coords, ")")
+
+    // Split the coordinates on the comma
+    parts := strings.Split(coords, ",")
+    if len(parts) != 2 {
+        return fmt.Errorf("invalid POINT data, expected two coordinates: %s", str)
+    }
+
+    // Parse Longitude and Latitude
+    lon, err := strconv.ParseFloat(strings.TrimSpace(parts[0]), 64)
+    if err != nil {
+        return fmt.Errorf("invalid longitude: %v", err)
+    }
+
+    lat, err := strconv.ParseFloat(strings.TrimSpace(parts[1]), 64)
+    if err != nil {
+        return fmt.Errorf("invalid latitude: %v", err)
+    }
+
+    // Set the parsed Longitude and Latitude
+    p.Longitude = lon
+    p.Latitude = lat
+
+    return nil
 }
 
 // Custom type for date fields without timezone information
@@ -108,15 +154,6 @@ type TransportationNetworkProvidersTrip struct {
     DropoffZipcode           *int       `json:"dropoff_zipcode"`
 }
 
-// Struct for PublicHealthStatistics table
-type PublicHealthStatistic struct {
-    // ID                int     `json:"id"`
-    Zipcode           *int     `json:"zipcode"`
-    BelowPovertyLevel *float64 `json:"below_poverty_level"`
-    PerCapitaIncome   *int     `json:"per_capita_income"`
-    Unemployment      *int     `json:"unemployment"`
-}
-
 // Struct for BuildingPermits table
 type BuildingPermit struct {
     // ID             int       `json:"id"`
@@ -131,27 +168,8 @@ type BuildingPermit struct {
     ZipCode         *string              `json:"zip_code"`
 }
 
-// Struct for Covid19Reports table
-type Covid19Report struct {
-    // ID                          int       `json:"id"`
-    ZipCode                     int       `json:"zip_code"`
-    WeekNumber                  int       `json:"week_number"`
-    WeekStart                   time.Time `json:"week_start"`
-    WeekEnd                     time.Time `json:"week_end"`
-    CasesWeekly                 int       `json:"cases_weekly"`
-    CasesCumulative             int       `json:"cases_cumulative"`
-    CaseRateWeekly              int       `json:"case_rate_weekly"`
-    CaseRateCumulative          int       `json:"case_rate_cumulative"`
-    TestsWeekly                 int       `json:"tests_weekly"`
-    TestsCumulative             int       `json:"tests_cumulative"`
-    TestRateWeekly              int       `json:"test_rate_weekly"`
-    TestRateCumulative          int       `json:"test_rate_cumulative"`
-    PercentTestedPositiveWeekly int       `json:"percent_tested_positive_weekly"`
-    PercentTestedPositiveCumulative int   `json:"percent_tested_positive_cumulative"`
-    ZipCodeLocation             Point     `json:"zip_code_location"`
-}
-
 // Struct for ChicagoCovid19CommunityVulnerabilityIndex table
+// A lot of these fields are blank, but that's just how the data is
 type ChicagoCovid19CommunityVulnerabilityIndex struct {
     GeographyType                         *string `json:"geography_type"`
     CommunityAreaOrZipCode                *string `json:"community_area_or_zip"`
@@ -169,4 +187,33 @@ type ChicagoCovid19CommunityVulnerabilityIndex struct {
     RankCovidHospitalAdmissionRate        *string `json:"rank_covid_19_hospital_admission_rate"`
     RankCovidCrudeMortalityRate           *string `json:"rank_covid_19_crude_mortality_rate"`
     Location                              *Point  `json:"location"`
+}
+
+// Struct for PublicHealthStatistics table
+type PublicHealthStatistic struct {
+    // ID                int     `json:"id"`
+    CommunityAreaName *string `json:"community_area"`
+    BelowPovertyLevel *string `json:"below_poverty_level"`
+    PerCapitaIncome   *string `json:"per_capita_income"`
+    Unemployment      *string `json:"unemployment"`
+}
+
+// Struct for Covid19Reports table
+type Covid19Report struct {
+    ID                              int       `json:"id"`
+    ZipCode                         *string   `json:"zip_code"`
+    WeekNumber                      *string   `json:"week_number"`
+    WeekStart                       *DateWithoutTimezone `json:"week_start"`
+    WeekEnd                         *DateWithoutTimezone `json:"week_end"`
+    CasesWeekly                     *string   `json:"cases_weekly"`
+    CasesCumulative                 *string   `json:"cases_cumulative"`
+    CaseRateWeekly                  *string   `json:"case_rate_weekly"`
+    CaseRateCumulative              *string   `json:"case_rate_cumulative"`
+    TestsWeekly                     *string   `json:"tests_weekly"`
+    TestsCumulative                 *string   `json:"tests_cumulative"`
+    TestRateWeekly                  *string   `json:"test_rate_weekly"`
+    TestRateCumulative              *string   `json:"test_rate_cumulative"`
+    PercentTestedPositiveWeekly     *string   `json:"percent_tested_positive_weekly"`
+    PercentTestedPositiveCumulative *string   `json:"percent_tested_positive_cumulative"`
+    ZipCodeLocation                 *Point    `json:"zip_code_location"`
 }

@@ -15,8 +15,8 @@ var db *sql.DB
 
 // Connection details
 var (
-  Hostname = "localhost"
-  Port     = 5431
+  Hostname = "postgres"
+  Port     = 5432
   Username = "myuser"
   Password = "mypassword"
   Database = "msds432"
@@ -53,6 +53,42 @@ func CountData(tableName string) error {
   }
   fmt.Printf("Number of rows for %s is %d\n", tableName, count)
   return nil
+}
+
+func GetData[T any](tableName string) ([]T, error) {
+    query := fmt.Sprintf("SELECT * FROM \"%s\" LIMIT 20", tableName)
+    rows, err := db.Query(query)
+    if err != nil {
+      return nil, err
+    }
+    defer rows.Close()
+
+    var results []T
+    for rows.Next() {
+      // Create a new instance of T
+      var model T
+      fields := reflect.ValueOf(&model).Elem()
+
+      // Create a slice of pointers for Scan
+      numFields := fields.NumField()
+      scanArgs := make([]any, numFields)
+      for i := 0; i < numFields; i++ {
+          scanArgs[i] = fields.Field(i).Addr().Interface()
+      }
+
+      // Scan the row
+      if err := rows.Scan(scanArgs...); err != nil {
+        return nil, err
+      }
+
+      results = append(results, model)
+    }
+
+    if err := rows.Err(); err != nil {
+      return nil, err
+    }
+
+    return results, nil
 }
 
 func InsertData[T any](tableName string, data T) error {
