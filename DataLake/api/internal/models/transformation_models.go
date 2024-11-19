@@ -120,7 +120,7 @@ func (d DateWithoutTimezone) Value() (driver.Value, error) {
 
 // Struct for TaxiTrips table
 type TaxiTrip struct {
-    // ID                       int        `json:"id"`
+    ID                       int        `json:"id"`
     TripID                   string     `json:"trip_id"`
     TripStart                *time.Time `json:"trip_start"`
     TripEnd                  *time.Time `json:"trip_end"`
@@ -138,7 +138,7 @@ type TaxiTrip struct {
 
 // Struct for TransportationNetworkProvidersTrips table
 type TransportationNetworkProvidersTrip struct {
-    // ID                       int       `json:"id"`
+    ID                       int       `json:"id"`
     TripID                   string     `json:"trip_id"`
     TripStart                *time.Time `json:"trip_start"`
     TripEnd                  *time.Time `json:"trip_end"`
@@ -156,7 +156,7 @@ type TransportationNetworkProvidersTrip struct {
 
 // Struct for BuildingPermits table
 type BuildingPermit struct {
-    // ID             int       `json:"id"`
+    ID              int                  `json:"id"`
     PermitNumber    *string              `json:"permit_"`
     StartDate       *DateWithoutTimezone `json:"application_start_date"`
     IssueDate       *DateWithoutTimezone `json:"issue_date"`
@@ -171,6 +171,7 @@ type BuildingPermit struct {
 // Struct for ChicagoCovid19CommunityVulnerabilityIndex table
 // A lot of these fields are blank, but that's just how the data is
 type ChicagoCovid19CommunityVulnerabilityIndex struct {
+    ID                                    int     `json:"id"`
     GeographyType                         *string `json:"geography_type"`
     CommunityAreaOrZipCode                *string `json:"community_area_or_zip"`
     CommunityAreaName                     *string `json:"community_area_name"`
@@ -191,7 +192,7 @@ type ChicagoCovid19CommunityVulnerabilityIndex struct {
 
 // Struct for PublicHealthStatistics table
 type PublicHealthStatistic struct {
-    // ID                int     `json:"id"`
+    ID                int     `json:"id"`
     CommunityAreaName *string `json:"community_area"`
     BelowPovertyLevel *string `json:"below_poverty_level"`
     PerCapitaIncome   *string `json:"per_capita_income"`

@@ -62,6 +62,7 @@ CREATE TABLE "BuildingPermits" (
 );
 
 CREATE TABLE "ChicagoCovid19CommunityVulnerabilityIndex" (
+    ID SERIAL PRIMARY KEY,
     GeographyType VARCHAR(10),
     CommunityAreaOrZipCode INT,
     CommunityAreaName VARCHAR(100),

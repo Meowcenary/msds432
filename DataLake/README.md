@@ -8,7 +8,13 @@ Backend Microservices
 ---
 api - Serves JSON data to be ingested by React JS frontend application. To build
     the project run `docker compose up --build api`. The accessible ports can
-    be edited in `docker-compose.yml`.
+    be edited in `docker-compose.yml`. 
+    Endpoints:
+    - /transportation_network_trips
+    - /building_permits
+    - /chicago_ccvi
+    - /public_health_stats
+    - /covid_19_reports
 
 datapull - Pulls data from Chicago Data Portal using Go and the SODA API. To
     build the project run `docker-compose build --no-cache datapull` or omit the

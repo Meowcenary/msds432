@@ -14,7 +14,6 @@ RUN go mod download
 COPY ./api/ /app/.
 
 # Copy shared code
-COPY ./shared/models /app/internal/models/.
 COPY ./shared/dbconnector /app/internal/dbconnector/.
 
 # Build the application as a static binary
