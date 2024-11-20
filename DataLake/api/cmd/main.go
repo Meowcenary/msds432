@@ -11,10 +11,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-"""
-Most of the server code is kept in this file to keep things simple, but it could
-be broken out into separate packages pretty easily.
-"""
 func main() {
   // Initialize the database connection pool
   if err := dbconnector.InitDB(); err != nil {
@@ -25,7 +21,7 @@ func main() {
 
 	// Router and routes
 	router := mux.NewRouter()
-	router.HandleFunc("taxi_trips", GetTaxiTrips).Methods("GET")
+	router.HandleFunc("/taxi_trips", GetTaxiTrips).Methods("GET")
 	router.HandleFunc("/transportation_network_trips", GetTransportationNetworkTrips).Methods("GET")
 	router.HandleFunc("/building_permits", GetBuildingPermits).Methods("GET")
 	router.HandleFunc("/chicago_ccvi", GetChicagoCCVI).Methods("GET")

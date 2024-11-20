@@ -15,8 +15,10 @@ var db *sql.DB
 
 // Connection details
 var (
+  // When running locally with "docker compose" use Hostname = "postgres"
+  // When running with kubernetes i.e pushing to the Docker repo, use Hostname = "postgres-service"
   Hostname = "postgres"
-  Port     = 5432
+  Port     = 5431
   Username = "myuser"
   Password = "mypassword"
   Database = "msds432"
