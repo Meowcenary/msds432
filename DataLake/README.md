@@ -110,6 +110,13 @@ kubectl cluster-info
 kubectl config current-context
 ```
 
+If something goes wrong, switch back to minikube with
+```
+kubectl config get-contexts
+kubectl config use-context minikube
+```
+and then try again
+
 Build the images, retag for publishing to Docker Hub, and push to registry with
 the following (replace ericesn with your docker hub profile):
 ```
