@@ -10,6 +10,14 @@ services:
     # depends_on:
       # - postgres
 
+  dashboard:
+    build:
+      context: .
+      dockerfile: ./dashboard/Dockerfile
+    ports:
+      # Nginx default port is 80 and 3000 is a typical dev port
+      - "3000:80"
+
   datapull:
     build:
       context: .

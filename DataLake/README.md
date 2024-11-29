@@ -25,6 +25,12 @@ datapull - Pulls data from Chicago Data Portal using Go and the SODA API. To
 postgres - Database for the data lake. To run the database locally use
     `docker-compose up postgres`.
 
+Frontend Microservices
+---
+dashboard - React app to display data stored in the shared database. The 
+libraries Material UI and Recharts are used to visualize the data returned from
+the api backend service.
+
 Scripts
 ---
 Scripts for development are stored in the "scripts" directory and can be run
