@@ -18,7 +18,7 @@ var (
   // When running locally with "docker compose" use Hostname = "postgres"
   // When running with kubernetes i.e pushing to the Docker repo, use Hostname = "postgres-service"
   Hostname = "postgres"
-  Port     = 5431
+  Port     = 5432
   Username = "myuser"
   Password = "mypassword"
   Database = "msds432"
@@ -57,8 +57,12 @@ func CountData(tableName string) error {
   return nil
 }
 
-func GetData[T any](tableName string) ([]T, error) {
-    query := fmt.Sprintf("SELECT * FROM \"%s\" LIMIT 20", tableName)
+func GetData[T any](tableName string, limit string) ([]T, error) {
+    // Set the default limit
+    if limit == "" {
+      limit = "20"
+    }
+    query := fmt.Sprintf("SELECT * FROM \"%s\" LIMIT %s", tableName, limit)
     rows, err := db.Query(query)
     if err != nil {
       return nil, err
