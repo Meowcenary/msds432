@@ -1,18 +1,47 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box } from "@mui/material";
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 function BuildingPermitsTableView() {
-  const [buildingPermits, setBuildingPermits] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const columns: GridColDef<(typeof rows)[number]>[] = [
+    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'permit_', headerName: 'Permit Number', width: 110 },
+    { field: 'processing_time', headerName: 'Processing Time', width: 110 },
+    { field: 'street_name', headerName: 'Street Name', width: 110 },
+    { field: 'street_direction', headerName: 'Street Direction', width: 110 },
+    { field: 'street_number', headerName: 'Street Number', width: 110 },
+    { field: 'zip_code', headerName: 'ZIP', width: 90 }
+  ];
+
+  // Handle selection change
+  const handleSelectionChange = (ids) => {
+    console.log("handleSelectionChange called");
+    setSelectedIds(ids); // Update selected IDs
+  };
+
+  // Filter rows for the selected IDs
+  const filterBySelected = () => {
+    setFilteredRows(rows.filter((row) => selectedIds.includes(row.id)));
+  };
+
+  // Reset to show all rows
+  const resetFilter = () => {
+    setFilteredRows(rows);
+  };
 
   // Load data for view
   useEffect(() => {
     console.log("Getting building permits useEffect");
     axios.get("http://localhost:8080/building_permits")
       .then((response) => {
-        setBuildingPermits(response.data);
+        setRows(response.data);
+        setFilteredRows(response.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -30,43 +59,28 @@ function BuildingPermitsTableView() {
     );
   if (error) return <div>Error: {error}</div>;
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Chicago Building Permits
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Permit Number </TableCell>
-              {/* <TableCell>Start Date</TableCell> */}
-              {/* <TableCell>Issue Date</TableCell> */}
-              <TableCell>Processing Time</TableCell>
-              <TableCell>Street Name</TableCell>
-              <TableCell>Street Direction</TableCell>
-              <TableCell>Street Number</TableCell>
-              <TableCell>Zip Code</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {buildingPermits.map((buildingPermit) => (
-              <TableRow key={buildingPermit.id}>
-                <TableCell>{buildingPermit.id}</TableCell>
-                <TableCell>{buildingPermit.permit_}</TableCell>
-                {/* <TableCell>{buildingPermit.application_start_date}</TableCell> */}
-                {/* <TableCell>{buildingPermit.issue_date}</TableCell> */}
-                <TableCell>{buildingPermit.processing_time}</TableCell>
-                <TableCell>{buildingPermit.street_name}</TableCell>
-                <TableCell>{buildingPermit.street_direction}</TableCell>
-                <TableCell>{buildingPermit.street_number}</TableCell>
-                <TableCell>{buildingPermit.zip_code}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+    <div style={{ height: 500, width: '100%' }}>
+      <div style={{ marginBottom: '10px' }}>
+        <button onClick={filterBySelected} disabled={selectedIds.length === 0}>
+          Filter by Selected
+        </button>
+        <button onClick={resetFilter} style={{ marginLeft: '10px' }}>
+          Reset
+        </button>
+      </div>
+      <h2>Chicago Building Permits</h2>
+      <DataGrid
+        rows={filteredRows} // Display filtered rows
+        columns={columns}
+        checkboxSelection // Allow row selection
+        onRowSelectionModelChange={(selectedId) => {
+            console.log("onSelectionModelChange");
+            handleSelectionChange(selectedId);
+          }
+        }
+        rowSelectionModel={selectedIds}
+      />
+    </div>
   );
 }
 

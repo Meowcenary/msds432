@@ -8,8 +8,9 @@ function HomeView() {
         Welcome to the Chicago Open Data Lake
       </Typography>
       <Typography variant="body1">
-        The dashboards available from this app visualize data ingested with Go using SODA
-        API and reports generated from that same data with Google AI tools.
+        The dashboards available from this app visualize data ingested with Go using
+        <br />
+        SODA API and reports generated from that same data with Google AI tools.
       </Typography>
     </Box>
   );

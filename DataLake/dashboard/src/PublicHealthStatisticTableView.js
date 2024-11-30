@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-function TaxiTripsTableView() {
+function PublicHealthStatisticTableView() {
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
@@ -11,13 +11,10 @@ function TaxiTripsTableView() {
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     { field: 'id', headerName: 'ID', width: 90 },
-    { field: 'trip_id', headerName: 'Trip ID', width: 110 },
-    { field: 'trip_start', headerName: 'Trip Start', width: 110 },
-    { field: 'trip_end', headerName: 'Trip End', width: 110 },
-    { field: 'pickup_community_area', headerName: 'Pickup Community Area', width: 110 },
-    { field: 'pickup_zip', headerName: 'Pickup Zip', width: 110 },
-    { field: 'dropoff_zip', headerName: 'Dropoff Zip', width: 90 },
-    { field: 'dropoff_community_area', headerName: 'Dropoff Community Area', width: 110 }
+    { field: 'community_area', headerName: 'Community Area', width: 110 },
+    { field: 'below_poverty_level', headerName: 'Below Poverty Level', width: 110 },
+    { field: 'per_capita_income', headerName: 'Per Capita Income', width: 110 },
+    { field: 'unemployment', headerName: 'Unemployment', width: 110 },
   ];
 
   // Handle selection change
@@ -36,9 +33,10 @@ function TaxiTripsTableView() {
     setFilteredRows(rows);
   };
 
+  // Load data for view
   useEffect(() => {
-    console.log("Getting taxi trips data");
-    axios.get("http://localhost:8080/taxi_trips")
+    console.log("Getting public health stats useEffect");
+    axios.get("http://localhost:8080/public_health_stats")
       .then((response) => {
         setRows(response.data);
         setFilteredRows(response.data);
@@ -54,7 +52,7 @@ function TaxiTripsTableView() {
   if (loading)
     return (
       <div>
-        <h1>Loading taxi trips...</h1>
+        <h1>Loading public health statistics...</h1>
       </div>
     );
   if (error) return <div>Error: {error}</div>;
@@ -68,7 +66,7 @@ function TaxiTripsTableView() {
           Reset
         </button>
       </div>
-      <h2>Chicago Taxi Trips 2013-2023</h2>
+      <h2>Chicago Public Health Statistics</h2>
       <DataGrid
         rows={filteredRows} // Display filtered rows
         columns={columns}
@@ -84,4 +82,4 @@ function TaxiTripsTableView() {
   );
 }
 
-export default TaxiTripsTableView;
+export default PublicHealthStatisticTableView

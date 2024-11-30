@@ -40,7 +40,7 @@ func GetTaxiTrips(w http.ResponseWriter, r *http.Request) {
 	log.Println("Getting taxi trips")
 	var rows []models.TaxiTrip
 	var err error
-	rows, err = dbconnector.GetData[models.TaxiTrip]("TaxiTrips", "")
+	rows, err = dbconnector.GetData[models.TaxiTrip]("TaxiTrips", "4000")
 	if err != nil {
 		panic(err)
 	}
