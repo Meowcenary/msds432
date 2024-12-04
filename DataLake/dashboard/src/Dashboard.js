@@ -44,6 +44,9 @@ function Dashboard() {
           <MenuItem component={Link} to="/public_health_statistics" onClick={handleMenuClose} >
             Public Health Statistics
           </MenuItem>
+          <MenuItem component={Link} to="covid_reports" onClick={handleMenuClose} >
+              Covid 19 Reports
+          </MenuItem>
         </Menu>
         <Button color="inherit" onClick={(event) => handleMenuClick(event, 'summarystats')} startIcon={<ListAltIcon />} >
           Summary Statistics
